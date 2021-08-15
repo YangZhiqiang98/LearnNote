@@ -108,7 +108,7 @@ ElasticSearch 核心功能就是数据检索。查询分析主要由两步：
 
 ##### 1、本地自定义
 
-在 `es/plugins/ik/config` 目录下，新建 `ext.dic` 文件（文件名任意）吗在改文件中可以配置自定义的词库。如果有多个词，换行写入新词即可。
+在 `es/plugins/ik/config` 目录下，新建 `ext.dic` 文件（文件名任意）在该文件中可以配置自定义的词库。如果有多个词，换行写入新词即可。
 
 然后在 `es/plugins/ik/config/IKAnalyzer.cfg.xml` 中配置扩展词典的位置。
 
@@ -138,9 +138,7 @@ ElasticSearch 核心功能就是数据检索。查询分析主要由两步：
 
 ### 索引基本操作
 
-#### 新建索引
-
-[索引操作API](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html)
+#### [新建索引](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html)
 
 1、通过 head 插件新建索引。
 
@@ -245,9 +243,7 @@ PUT /book/_settings
 }
 ```
 
-#### 查看索引
-
-[查看索引API](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-index.html)
+#### [查看索引](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-index.html)
 
 请求查看
 
@@ -269,9 +265,7 @@ GET test,book/_settings
 GET _all/_settings
 ```
 
-#### 删除索引
-
-[删除索引API](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html)
+#### [删除索引](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html)
 
 ```json
 DELETE /my-index-000001
@@ -283,21 +277,21 @@ DELETE /_index_template/my-index-template
 
 #### 索引打开/关闭
 
-关闭索引 : [API](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-close.html)
+[关闭索引](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-close.html) 
 
 ```json
 POST /my-index-000001/_close
 ```
 
-打开索引 : [API](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-open-close.html)
+[打开索引](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-open-close.html)
 
 ```json
 POST /my-index-000001/_open
 ```
 
-#### 复制索引
+#### [复制索引](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/docs-reindex.html)
 
-索引复制，只会复制数据，不会复制索引配置。复制没有数据的索引，不会复制成功。[API](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/docs-reindex.html)
+索引复制，只会复制数据，不会复制索引配置。复制没有数据的索引，不会复制成功。
 
 ```json
 POST _reindex
@@ -307,9 +301,9 @@ POST _reindex
 }
 ```
 
-#### 索引别名
+#### [索引别名](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/indices-add-alias.html)
 
-可以为索引创建别名，如果这个别名是唯一的，该别名可以代替索引名称。[API](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/indices-add-alias.html)
+可以为索引创建别名，如果这个别名是唯一的，该别名可以代替索引名称。
 
 ```json
 POST /book/_alias/mybook
@@ -327,7 +321,7 @@ POST /_aliases
 }
 ```
 
-删除索引别名。[API](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/indices-delete-alias.html)
+[删除索引别名](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/indices-delete-alias.html)。
 
 ```json
 DELETE /book/_alias/mybook 
@@ -345,7 +339,7 @@ POST /_aliases
 }
 ```
 
-查看索引别名。[API](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/indices-get-alias.html)
+[查看索引别名](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/indices-get-alias.html)。
 
 ```json
 // 查看某一个索引的别名
@@ -362,9 +356,9 @@ GET /_alias
 
 ### 文档操作
 
-#### 新建文档
+#### [新建文档](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html)
 
-[新增文档操作API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html)
+
 
 ```
 PUT /<target>/_doc/<_id>
@@ -416,7 +410,7 @@ PUT blog/_doc/1
 
 #### 获取文档
 
-[获取文档API](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/docs-get.html)
+[获取文档](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/docs-get.html)
 
 ```
 GET <index>/_doc/<_id>
@@ -430,7 +424,7 @@ HEAD <index>/_source/<_id>
 
 GET 用于获取文档，HEAD 用于探测文档是否存在。
 
-[批量获取API](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/docs-multi-get.html)
+[批量获取](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/docs-multi-get.html)
 
 ```
 GET /_mget
@@ -459,7 +453,7 @@ GET /_mget
 
 
 
-#### 文档更新
+#### [文档更新](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/docs-update.html)
 
 获取文档
 
@@ -486,7 +480,7 @@ GET /_mget
 
 注意：文档更新一次，version 就会自增 1。
 
-[文档更新API](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/docs-update.html)
+
 
 ```
 POST /<index>/_update/<_id>
@@ -542,9 +536,9 @@ POST /blog/_update/1
 }
 ```
 
-#### 查询更新
+#### [查询更新](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/docs-update-by-query.html)
 
-[查询更新API](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/docs-update-by-query.html)
+
 
 通过条件查询到条件，然后再去更新。
 
@@ -567,7 +561,7 @@ POST /blog/_update_by_query
 
 #### 删除文档
 
-[删除文档API](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/docs-delete.html)
+[删除文档](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/docs-delete.html)
 
 ```
 DELETE /<index>/_doc/<_id>
@@ -575,7 +569,7 @@ DELETE /<index>/_doc/<_id>
 
 如果在添加文档时指定了路由， 则删除文档时也需要指定路由，否则删除失败
 
-[查询删除API](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/docs-delete-by-query.html)
+[查询删除](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/docs-delete-by-query.html)
 
 ```
 POST /blog/_delete_by_query
@@ -612,7 +606,7 @@ POST blog/_delete_by_query
 
 #### 批量操作
 
-es 中通过 [Bulk API](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/docs-bulk.html) 可以执行批量索引、批量删除、批量更新等操作。
+es 中通过 [Bulk API](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/docs-bulk.html) 可以执行批量索引、批量删除、批量更新等操作。
 
 首先需要将所有的批量操作写入一个 JSON 文件中，然后通过 POST 请求将该 JSON 文件上传并执行。
 
@@ -645,17 +639,13 @@ POST _bulk
 
 ### 文档路由
 
-查看文档被保存到哪个分片中
+[查看文档被保存到哪个分片中](https://www.elastic.co/guide/en/elasticsearch/reference/current/cat-shards.html)
 
 ```
 GET _cat/shards/blog?v
 ```
 
-[cat shards API | Elasticsearch Guide [7.13\] | Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/cat-shards.html)
-
-那么 es 中是按照什么规则去分配分片的？
-
-[_routing field | Elasticsearch Guide [7.13\] | Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/mapping-routing-field.html)
+那么 es 中是按照什么规则去分配分片的？[routing-field](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-routing-field.html)
 
 es 中的路由机制是通过哈希算法，将具有相同哈希值的文档放到一个主分片中，分片位置的计算方式如下：
 
@@ -680,7 +670,7 @@ GET test1/_doc/d?routing=ee
 
 ### 版本控制
 
-在 es 中， 版本控制使用的锁是乐观锁。[Optimistic concurrency control | Elasticsearch Guide [7.13\] | Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/optimistic-concurrency-control.html)
+在 es 中， 版本控制使用的锁是乐观锁。[ Optimistic concurrency control](https://www.elastic.co/guide/en/elasticsearch/reference/current/optimistic-concurrency-control.html)
 
 #### es6.7 之前
 
@@ -875,39 +865,35 @@ PUT blog
 }
 ```
 
-##### 静态映射（显示映射）
-
-[Explicit mapping | Elasticsearch Guide [7.13\] | Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/current/explicit-mapping.html)
+##### [静态映射（显示映射）](https://www.elastic.co/guide/en/elasticsearch/reference/current/explicit-mapping.html)
 
 
 
-### 字段类型
+### [字段类型](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html)
 
-[Field data types | Elasticsearch Guide [7.13\] | Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html)
+
 
 #### 核心数据类型
 
 ##### 字符串类型
 
 - ~~string：（已过期），es5 之前用来描述字符串~~
-- [text](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/text.html)：用来做全文检索，用了 text 后，字段内容会被分析， 在生成倒排索引之前，字符串会被分词器分成一个个词项。text 类型的字段不用于排序，很少用于聚合。这种字符串类型也被称为 analyzed 字段。
-- [keyword](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/keyword.html) ：适用于结构化的字段，这种类型的字段可以用作过滤、排序、聚合等。也成为了 not-analyzed 字段。
+- [text](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/text.html)：用来做全文检索，用了 text 后，字段内容会被分析， 在生成倒排索引之前，字符串会被分词器分成一个个词项。text 类型的字段不用于排序，很少用于聚合。这种字符串类型也被称为 analyzed 字段。
+- [keyword](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/keyword.html) ：适用于结构化的字段，这种类型的字段可以用作过滤、排序、聚合等。也成为了 not-analyzed 字段。 
 
-##### [数字类型](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/number.html)
+##### [数字类型](https://www.elastic.co/guide/en/elasticsearch/reference/current/number.html)
 
 | 类型            | 描述                                                         |
 | --------------- | ------------------------------------------------------------ |
-| `long`          | A signed 64-bit integer with a minimum value of `-263` and a maximum value of `263-1`. |
-| `integer`       | A signed 32-bit integer with a minimum value of `-231` and a maximum value of `231-1`. |
+| `long`          | A signed 64-bit integer with a minimum value of `-2^63` and a maximum value of `2^63-1`. |
+| `integer`       | A signed 32-bit integer with a minimum value of `-2^31` and a maximum value of `2^31-1`. |
 | `short`         | A signed 16-bit integer with a minimum value of `-32,768` and a maximum value of `32,767`. |
 | `byte`          | A signed 8-bit integer with a minimum value of `-128` and a maximum value of `127`. |
 | `double`        | A double-precision 64-bit IEEE 754 floating point number, restricted to finite values. |
 | `float`         | A single-precision 32-bit IEEE 754 floating point number, restricted to finite values. |
 | `half_float`    | A half-precision 16-bit IEEE 754 floating point number, restricted to finite values. |
 | `scaled_float`  | A floating point number that is backed by a `long`, scaled by a fixed `double` scaling factor. |
-| `unsigned_long` | An unsigned 64-bit integer with a minimum value of 0 and a maximum value of `264-1`. |
-
-
+| `unsigned_long` | An unsigned 64-bit integer with a minimum value of 0 and a maximum value of `2^64-1`. |
 
 - 在满足需求的情况下，优先使用范围小的字段，字段的长度越短，索引和搜索的效率越高。
 
@@ -929,7 +915,7 @@ PUT product
 
 
 
-##### [日期类型](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/date.html)
+##### [日期类型](https://www.elastic.co/guide/en/elasticsearch/reference/current/date.html)
 
 由于 JSON 中没有日期类型，所以 es 中日期类型形式比较多样：
 
@@ -938,43 +924,43 @@ PUT product
 
 es 内部将时间转为 UTC，然后将时间按照 milliseconds-since-the-epoch 的长整型来存储。
 
-##### [布尔类型](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/boolean.html)
+##### [布尔类型](https://www.elastic.co/guide/en/elasticsearch/reference/current/boolean.html)
 
 | 值           | 说描述                                  |
 | ------------ | --------------------------------------- |
 | False values | `false`, `"false"`, `""` (empty string) |
 | True values  | `true`, `"true"`                        |
 
-##### [二进制类型](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/binary.html)
+##### [二进制类型](https://www.elastic.co/guide/en/elasticsearch/reference/current/binary.html)
 
 二进制类型接收的是 Base64 编码的字符串，默认不存储，也不可搜索。
 
-##### [范围类型](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/range.html)
+##### [范围类型](https://www.elastic.co/guide/en/elasticsearch/reference/current/range.html)
 
 | 类型            | 描述                                                         |
 | --------------- | ------------------------------------------------------------ |
-| `integer_range` | A range of signed 32-bit integers with a minimum value of `-231` and maximum of `231-1`. |
+| `integer_range` | A range of signed 32-bit integers with a minimum value of `-2^31` and maximum of `2^31-1`. |
 | `float_range`   | A range of single-precision 32-bit IEEE 754 floating point values. |
-| `long_range`    | A range of signed 64-bit integers with a minimum value of `-263` and maximum of `263-1`. |
+| `long_range`    | A range of signed 64-bit integers with a minimum value of `-2^63` and maximum of `2^63-1`. |
 | `double_range`  | A range of double-precision 64-bit IEEE 754 floating point values. |
-| `date_range`    | A range of [`date`](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/date.html) values. Date ranges support various date formats through the [`format`](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/mapping-date-format.html) mapping parameter. Regardless of the format used, date values are parsed into an unsigned 64-bit integer representing milliseconds since the Unix epoch in UTC. Values containing the `now` [date math](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/common-options.html#date-math) expression are not supported. |
+| `date_range`    | A range of [`date`](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/date.html) values. Date ranges support various date formats through the [`format`](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/mapping-date-format.html) mapping parameter. Regardless of the format used, date values are parsed into an unsigned 64-bit integer representing milliseconds since the Unix epoch in UTC. Values containing the `now` [date math](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/common-options.html#date-math) expression are not supported. |
 | `ip_range`      | A range of ip values supporting either [IPv4](https://en.wikipedia.org/wiki/IPv4) or [IPv6](https://en.wikipedia.org/wiki/IPv6) (or mixed) addresses. |
 
 
 
 #### 复合类型
 
-##### [数组类型](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/array.html)
+##### [数组类型](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/array.html)
 
 在 Elasticsearch 中，没有专门的数组类型，默认情况下，任何字段都可以有0个或者多个值。但是，数组中的元素必须是同一种类型。
 
 第一个添加进数组的元素的类型决定了整个数组的类型。
 
-##### [对象类型](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/object.html)
+##### [对象类型](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/object.html)
 
 由于 JSON 本身具有层级关系，所以文档包含内部对象，内部对象，还可以包含内部对象
 
-##### [嵌套类型](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/nested.html)
+##### [嵌套类型](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/nested.html)
 
 nested 类型是 object 类型的特例。
 
@@ -1067,7 +1053,7 @@ GET my-index-000001/_search
 - 把距离整合到文档的相关性分数中
 - 按距离对文档进行排序
 
-##### [Geo-point](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/geo-point.html)
+##### [Geo-point](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/geo-point.html)
 
 此类型接受经纬度对，即坐标点。定义方式如下：
 
@@ -1142,7 +1128,7 @@ GET my-index-000001/_search
 
 
 
-##### [Geo-shape](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/geo-shape.html)
+##### [Geo-shape](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/geo-shape.html)
 
 geo_shape 数据类型有助于对任意地理形状（例如矩形和多边形）进行索引和搜索。当被索引的数据或正在执行的查询包含除点以外的形状时，应该使用它。
 
@@ -1160,11 +1146,11 @@ geo_shape 数据类型有助于对任意地理形状（例如矩形和多边形�
 | `N/A`                | `BBOX`               | `envelope`           | A bounding rectangle, or envelope, specified by specifying only the top left and bottom right points. |
 | `N/A`                | `N/A`                | `circle`             | A circle specified by a center point and radius with units, which default to `METERS`. |
 
-使用方法详见：[官方示例](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/geo-shape.html)
+使用方法详见：[官方示例](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/geo-shape.html)
 
 #### 特殊类型
 
-##### [IP](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/ip.html) 
+##### [IP](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/ip.html) 
 
 IP 类型可存储索引 IPV4 和 IPV6 地址。
 
@@ -1197,7 +1183,7 @@ GET my-index-000001/_search
 
 
 
-##### [Token count](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/token-count.html)
+##### [Token count](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/token-count.html)
 
 用于统计字符串分词后的词项个数。
 
@@ -1235,9 +1221,9 @@ GET my-index-000001/_search
 }
 ```
 
-### [Elasticsearch 映射参数](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/mapping-params.html)
+### [Elasticsearch 映射参数](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/mapping-params.html)
 
-#### [analyer](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/analyzer.html)
+#### [analyer](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/analyzer.html)
 
 定义文本字段的分词器。默认对索引和查询都有效。
 
@@ -1281,11 +1267,11 @@ PUT my-index-000001
 }
 ```
 
-#### [search_analyzer](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/search-analyzer.html)
+#### [search_analyzer](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/search-analyzer.html)
 
 查询时候的分词器。默认情况下，如果没有配置 search_analyzer,则查询时，首先查看有没有 search_analyzer,有的话，就用 search_analyzer 来进行分词，如果没有，则看有没有 analyzer，如果有，则用 analyzer 来进行分词，否则使用 es 默认的分词器。
 
-#### [normalizer](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/normalizer.html)
+#### [normalizer](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/normalizer.html)
 
 normalizer 参数用于解析前（索引或者查询）的标准化配置。
 
@@ -1319,7 +1305,7 @@ PUT my-index-000001
 }
 ```
 
-#### [boost](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/mapping-boost.html)
+#### [boost](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/mapping-boost.html)
 
 boost 参数可以设置字段的权重。
 
@@ -1361,7 +1347,7 @@ GET my-index-000001/_search
 
 
 
-#### [coerce](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/mapping-boost.html)
+#### [coerce](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/mapping-boost.html)
 
 coerce 用来清除脏数据，默认为 true。
 
@@ -1387,7 +1373,7 @@ PUT my-index-000001
 
 此时，就不能向 age 字段传入字符串了。
 
-#### [copy_to](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/copy-to.html)
+#### [copy_to](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/copy-to.html)
 
 这个属性，可以将多个字段的值，复制到同一个组字段中。
 
@@ -1430,7 +1416,7 @@ GET my-index-000001/_search
 }
 ```
 
-#### [doc_values](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/doc-values.html) 和 fileddate
+#### [doc_values](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/doc-values.html) 和 fileddate
 
 es 中的搜索主要是用倒排索引， doc_values 参数是为了加快排序、聚合操作而生的，当建立倒排索引的时候，会额外增加列式存储映射。
 
@@ -1504,9 +1490,9 @@ PUT my-index-000001
 }
 ```
 
-#### [dynamic](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/dynamic.html)
+#### [dynamic](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/dynamic.html)
 
-#### [enabled](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/enabled.html)
+#### [enabled](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/enabled.html)
 
 es 默认会索引所有的字段，但是有的字段可能只需要存储，不需要索引。此时可以通过 enabled 字段来控制。
 
@@ -1525,7 +1511,7 @@ PUT blog
 
 设置了 enabled 为 false 之后，就不可以再通过该字段进行搜索了。
 
-#### [format](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/mapping-date-format.html)
+#### [format](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/mapping-date-format.html)
 
 日期格式。format 可以规范日期格式，而且一次可以定义多个 format。
 
@@ -1546,11 +1532,11 @@ PUT users
 - 多个日期格式之间，使用 || 符号连接，注意没有空格
 - 如果用户没有执行日期的 format ，默认的日期格式是 `strict_date_optional_time||epoch_mills`
 
-#### [ignore_above](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/ignore-above.html)
+#### [ignore_above](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/ignore-above.html)
 
 长度超过 ignore_above 设置的字符串将不会被索引或存储。对于字符串数组，ignore_above 将分别应用于每个数组元素，并且不会索引或存储长于 ignore_above 的字符串元素。
 
-#### [ignore_malformed](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/ignore-malformed.html)
+#### [ignore_malformed](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/ignore-malformed.html)
 
 默认情况下，尝试将错误的数据类型索引到字段中会引发异常，并拒绝整个文档。 ignore_malformed 参数如果设置为 true，则允许忽略异常。格式错误的字段没有被索引，但是文档中的其他字段被正常处理。
 
@@ -1588,11 +1574,11 @@ PUT my-index-000001/_doc/2
 
 #### ~~include_in_all~~
 
-####  [index](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/mapping-index.html)
+####  [index](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/mapping-index.html)
 
 index 选项控制是否对字段值进行索引。它接受 true 或 false 并默认为 true。未编入索引的字段不可查询。
 
-#### [index_options](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/index-options.html)
+#### [index_options](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/index-options.html)
 
 index_options 控制索引时哪些信息被存储到倒排索引中（用在 text 字段中），有四种取值：
 
@@ -1610,17 +1596,17 @@ Doc number and term frequencies are indexed. Term frequencies are used to score 
 
 **`positions` (default)**
 
-Doc number, term frequencies, and term positions (or order) are indexed. Positions can be used for [proximity or phrase queries](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/query-dsl-match-query-phrase.html).
+Doc number, term frequencies, and term positions (or order) are indexed. Positions can be used for [proximity or phrase queries](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/query-dsl-match-query-phrase.html).
 
 文档编号、词项频率和词项位置（或顺序）被索引。位置可用于邻近或短语查询。
 
 **`offsets`**
 
-Doc number, term frequencies, positions, and start and end character offsets (which map the term back to the original string) are indexed. Offsets are used by the [unified highlighter](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/highlighting.html#unified-highlighter) to speed up highlighting.
+Doc number, term frequencies, positions, and start and end character offsets (which map the term back to the original string) are indexed. Offsets are used by the [unified highlighter](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/highlighting.html#unified-highlighter) to speed up highlighting.
 
 文档编号、词项频率、词项位置、词项开始和结束的字符位置都被索引。偏移用来加速突出显示。
 
-#### [norms](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/norms.html)
+#### [norms](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/norms.html)
 
 norms 对字段评分有用，text 默认开启 norms，如果不是特别需要，不要开启 norms。
 
@@ -1638,7 +1624,7 @@ PUT my-index-000001/_mapping
 
 
 
-#### [null_values](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/null-value.html)
+#### [null_values](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/null-value.html)
 
 在 es 中，值为 null 的字段不索引也不可以被搜索，null_value 可以让值为 null 的字段显式的可索引、可搜索：
 
@@ -1677,7 +1663,7 @@ GET my-index-000001/_search
 
 
 
-#### [position_increment_gap](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/position-increment-gap.html)
+#### [position_increment_gap](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/position-increment-gap.html)
 
 被解析的 text 字段会将 term 的位置考虑进去，以便能够支持邻近或短语查询。当索引具有多个值的文本字段时，会在值之间添加一个“假”间隙，以防止大多数短语查询跨值匹配。这个间隙的大小是使用 position_increment_gap 配置的，默认为 100。
 
@@ -1726,9 +1712,9 @@ PUT my-index-000001
 
 
 
-#### [properties](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/properties.html)
+#### [properties](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/properties.html)
 
-#### [similarity](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/similarity.html)
+#### [similarity](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/similarity.html)
 
 similarity 指定了文档的评分模型，默认有三种：
 
@@ -1763,11 +1749,11 @@ PUT my-index-000001
 
 
 
-#### [store](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/mapping-store.html)
+#### [store](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/mapping-store.html)
 
 默认情况下，字段会被索引，也可以搜索，但是不会存储，虽然不会被存储的，但是 `_source` 中有一个字段的备份。如果想将字段存储下来，可以通过配置 store 来实现。
 
-#### [term_vectors](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/term-vector.html)
+#### [term_vectors](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/term-vector.html)
 
 term_vectors 是分词器产生的信息，包括
 
@@ -1788,7 +1774,7 @@ term_vectors 是分词器产生的信息，包括
 | `with_positions_payloads`         | Terms, positions, and payloads are stored.          |
 | `with_positions_offsets_payloads` | Terms, positions, offsets and payloads are stored.  |
 
-#### [fields](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/multi-fields.html)
+#### [fields](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/multi-fields.html)
 
 fields 参数可以让同一字段有多种不同的索引方式。 为了不同的目的以不同的方式索引相同的字段通常很有用。
 
@@ -1843,7 +1829,7 @@ GET my-index-000001/_search
 
 ### Elasticsearch 映射模板
 
-es 中有动态映射，但是有的时候动态映射不能满足我们的需求，此时可以通过[映射模板](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/dynamic-templates.html)来解决。
+es 中有动态映射，但是有的时候动态映射不能满足我们的需求，此时可以通过[映射模板](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/dynamic-templates.html)来解决。
 
 ```json
 PUT my-index-000001
@@ -1873,7 +1859,7 @@ PUT my-index-000001
 
 **2、搜索时，当 es 接收到用户的搜索请求之后，就会去倒排索引中查询，通过倒排索引中维护的倒排记录表找到关键词对应的文档集合，然后对文档进行评分、排序、高亮等处理，处理完成后返回文档。**
 
-[Request body search | Elasticsearch Guide [7.13\] | Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/search-request-body.html)
+[Request body search | Elasticsearch Guide [7.13\] | Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/search-request-body.html)
 
 ```
 PUT books
@@ -1909,7 +1895,7 @@ PUT books
 
 
 
-#### [简单搜索](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/query-dsl-match-all-query.html)
+#### [简单搜索](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/query-dsl-match-all-query.html)
 
 查询文档：
 
@@ -1930,7 +1916,7 @@ GET books/_search
 
 简单搜索默认显示10 条记录。
 
-#### [词项查询](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/query-dsl-term-query.html)
+#### [词项查询](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/query-dsl-term-query.html)
 
 即 term 查询，就是根据 **词**去查询，查询指定字段中包含给定单词的文档， term 查询不被解析，只有搜索的词和文档中的词精确匹配，才会返回文档。应用场景如：人名、地名等。
 
@@ -1945,7 +1931,7 @@ GET books/_search
 }
 ```
 
-#### [分页](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/collapse-search-results.html)
+#### [分页](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/collapse-search-results.html)
 
 ```
 GET books/_search
@@ -1962,7 +1948,7 @@ GET books/_search
 
 
 
-#### [过滤返回字段](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/search-fields.html#source-filtering)
+#### [过滤返回字段](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/search-fields.html#source-filtering)
 
 指定返回哪些字段
 
@@ -1980,7 +1966,7 @@ GET books/_search
 }
 ```
 
-#### [最小评分](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/search-search.html#search-api-min-score)
+#### [最小评分](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/search-search.html#search-api-min-score)
 
 与关键词相关度低于指定分数的文档不返回，
 
@@ -1997,7 +1983,7 @@ GET books/_search
 }
 ```
 
-#### [高亮](https://www.elastic.co/guide/en/elasticsearch/reference/7.13/highlighting.html)
+#### [高亮](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/highlighting.html)
 
 查询关键字高亮：
 

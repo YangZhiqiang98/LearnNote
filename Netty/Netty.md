@@ -654,8 +654,6 @@ socket.getOutputStream().write(arr);
 
 ## 5.4 单 Reactor 单线程
 
-原理图，并使用 `NIO` 群聊系统验证
-
 ![img](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211011200823.png)
 
 ### 5.4.1 方案说明
@@ -1121,7 +1119,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         ctx.close();
     }
-}Copy to clipboardErrorCopied
+}
 ```
 
 ### 5.8.8 方案再说明
@@ -1162,162 +1160,6 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
    - 通过 `getCause` 方法来获取已完成的当前操作失败的原因；
    - 通过 `isCancelled` 方法来判断已完成的当前操作是否被取消；
    - 通过 `addListener` 方法来注册监听器，当操作已完成（`isDone`方法返回完成），将会通知指定的监听器；如果 `Future` 对象已完成，则通知指定的监听器
-
-举例说明 演示：绑定端口是异步操作，当绑定操作处理完，将会调用相应的监听器处理逻辑
-
-```java
-//绑定一个端口并且同步,生成了一个ChannelFuture对象
-//启动服务器(并绑定端口)
-ChannelFuture cf = bootstrap.bind(6668).sync();
-//给cf注册监听器，监控我们关心的事件
-cf.addListener(new ChannelFutureListener() {
-   @Override
-   public void operationComplete (ChannelFuture future) throws Exception {
-      if (cf.isSuccess()) {
-         System.out.println("监听端口6668成功");
-      } else {
-         System.out.println("监听端口6668失败");
-      }
-   }
-});Copy to clipboardErrorCopied
-```
-
-## 5.10 快速入门实例 - HTTP服务
-
-1. 实例要求：使用 `IDEA` 创建 `Netty` 项目
-2. `Netty` 服务器在 `6668` 端口监听，浏览器发出请求 `http://localhost:6668/`
-3. 服务器可以回复消息给客户端"Hello!我是服务器5",并对特定请求资源进行过滤。
-4. 目的：`Netty` 可以做 `Http` 服务开发，并且理解 `Handler` 实例和客户端及其请求的关系。
-5. 看老师代码演示
-
-```java
-TestServer.java
-
-package com.atguigu.netty.http;
-
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-
-public class TestServer {
-    
-    public static void main(String[] args) throws Exception {
-
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-
-        try {
-            ServerBootstrap serverBootstrap = new ServerBootstrap();
-
-            serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new TestServerInitializer());
-
-            ChannelFuture channelFuture = serverBootstrap.bind(6668).sync();
-
-            channelFuture.channel().closeFuture().sync();
-
-        } finally {
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
-        }
-    }
-}
-
-TestServerInitializer.java
-
-package com.atguigu.netty.http;
-
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.HttpServerCodec;
-
-public class TestServerInitializer extends ChannelInitializer<SocketChannel> {
-
-    @Override
-    protected void initChannel(SocketChannel ch) throws Exception {
-
-        //向管道加入处理器
-
-        //得到管道
-        ChannelPipeline pipeline = ch.pipeline();
-
-        //加入一个netty 提供的httpServerCodec codec =>[coder - decoder]
-        //HttpServerCodec 说明
-        //1. HttpServerCodec 是netty 提供的处理http的 编-解码器
-        pipeline.addLast("MyHttpServerCodec", new HttpServerCodec());
-        //2. 增加一个自定义的handler
-        pipeline.addLast("MyTestHttpServerHandler", new TestHttpServerHandler());
-
-        System.out.println("ok~~~~");
-    }
-}
-
-TestHttpServerHandler.java
-
-package com.atguigu.netty.http;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.*;
-import io.netty.util.CharsetUtil;
-
-import java.net.URI;
-
-/**
- * 说明
- * 1. SimpleChannelInboundHandler 是 ChannelInboundHandlerAdapter
- * 2. HttpObject 客户端和服务器端相互通讯的数据被封装成 HttpObject
- */
-public class TestHttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
-
-    //channelRead0 读取客户端数据
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
-
-        System.out.println("对应的channel=" + ctx.channel() + " pipeline=" + ctx
-                .pipeline() + " 通过pipeline获取channel" + ctx.pipeline().channel());
-
-        System.out.println("当前ctx的handler=" + ctx.handler());
-
-        //判断 msg 是不是 httprequest请求
-        if (msg instanceof HttpRequest) {
-
-            System.out.println("ctx 类型=" + ctx.getClass());
-
-            System.out.println("pipeline hashcode" + ctx.pipeline().hashCode() + " TestHttpServerHandler hash=" + this.hashCode());
-
-            System.out.println("msg 类型=" + msg.getClass());
-            System.out.println("客户端地址" + ctx.channel().remoteAddress());
-
-            //获取到
-            HttpRequest httpRequest = (HttpRequest) msg;
-            //获取uri, 过滤指定的资源
-            URI uri = new URI(httpRequest.uri());
-            if ("/favicon.ico".equals(uri.getPath())) {
-                System.out.println("请求了 favicon.ico, 不做响应");
-                return;
-            }
-            //回复信息给浏览器 [http协议]
-
-            ByteBuf content = Unpooled.copiedBuffer("hello, 我是服务器", CharsetUtil.UTF_8);
-
-            //构造一个http的相应，即 httpresponse
-            FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);
-
-            response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
-            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, content.readableBytes());
-
-            //将构建好 response返回
-            ctx.writeAndFlush(response);
-
-        }
-    }
-}
-```
 
 
 
@@ -1377,7 +1219,6 @@ public class TestHttpServerHandler extends SimpleChannelInboundHandler<HttpObjec
 ## 6.5 ChannelHandler 及其实现类
 
 1. `ChannelHandler` 是一个接口，处理 `I/O` 事件或拦截 `I/O` 操作，并将其转发到其 `ChannelPipeline`（业务处理链）中的下一个处理程序。
-2. `ChannelHandler` 本身并没有提供很多方法，因为这个接口有许多的方法需要实现，方便使用期间，可以继承它的子类
 3. `ChannelHandler` 及其实现类一览图（后）
 
 ![img](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211013225238.png)
@@ -1393,7 +1234,7 @@ public class TestHttpServerHandler extends SimpleChannelInboundHandler<HttpObjec
 ![img](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211013225513.png)
 
 - 一个 Channel 包含一个 ChannelPipeline ,而 ChannelPipeline 中又维护了一个由 ChannelHandlerContext 组成的双向链表，并且每个 ChannelHandlerContext 中又关联着一个 ChannelHandler。
-- 入站和出站事件在一个双向链表中，入站事件会从链表 head 往后传递到最后一个入站的 handler，出站事件会从链表 tail 往前传递到最前一个出站的 handler,两种类型的 handler 互补干扰。
+- 入站和出站事件在一个双向链表中，入站事件会从链表 head 往后传递到最后一个入站的 handler，出站事件会从链表 tail 往前传递到最前一个出站的 handler,两种类型的 handler 互不干扰。
 
 4.常用方法 `ChannelPipeline addFirst(ChannelHandler... handlers)`，把一个业务处理类（`handler`）添加到链中的第一个位置`ChannelPipeline addLast(ChannelHandler... handlers)`，把一个业务处理类（`handler`）添加到链中的最后一个位置
 

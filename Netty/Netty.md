@@ -1270,11 +1270,11 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
 ## 7.2 Netty 本身的编码解码的机制和问题分析
 
-4. `Netty` 本身自带的 `ObjectDecoder` 和 `ObjectEncoder` 可以用来实现 `POJO` 对象或各种业务对象的编码和解码，底层使用的仍是Java序列化技术,而Java序列化技术本身效率就不高，存在如下问题
-   - 无法跨语言
-   - 序列化后的体积太大，是二进制编码的5倍多。
-   - 序列化性能太低
-5. =>引出新的解决方案[`Google` 的 `Protobuf`]
+`Netty` 本身自带的 `ObjectDecoder` 和 `ObjectEncoder` 可以用来实现 `POJO` 对象或各种业务对象的编码和解码，底层使用的仍是Java序列化技术,而Java序列化技术本身效率就不高，存在如下问题
+
+- 无法跨语言
+- 序列化后的体积太大，是二进制编码的5倍多。
+- 序列化性能太低
 
 ## 7.3 Protobuf
 
@@ -1412,7 +1412,7 @@ message Worker {
 - 不论解码器 `handler` 还是编码器 `handler` 即接收的消息类型必须与待处理的消息类型一致，否则该 `handler` 不会被执行
 - 在解码器进行数据解码时，需要判断缓存区（`ByteBuf`）的数据是否足够，否则接收到的结果会期望结果可能不一致
 
-## [8.5 解码器 - ReplayingDecoder](https://dongzl.github.io/netty-handbook/#/_content/chapter08?id=_85-解码器-replayingdecoder)
+## 8.5 解码器 - ReplayingDecoder
 
 1. `public abstract class ReplayingDecoder<S> extends ByteToMessageDecoder`
 2. `ReplayingDecoder` 扩展了 `ByteToMessageDecoder` 类，使用这个类，我们不必调用 `readableBytes()` 方法。参数 `S` 指定了用户状态管理的类型，其中 `Void` 代表不需要状态管理
@@ -1435,7 +1435,7 @@ public class MyByteToLongDecoder2 extends ReplayingDecoder<Void> {
         //在 ReplayingDecoder 不需要判断数据是否足够读取，内部会进行处理判断
         out.add(in.readLong());
     }
-}Copy to clipboardErrorCopied
+}
 ```
 
 `ReplayingDecoder` 使用方便，但它也有一些局限性：

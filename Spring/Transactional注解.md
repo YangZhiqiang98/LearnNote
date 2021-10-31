@@ -96,3 +96,7 @@
   - 单线程的情况下，一个事务会在层级式调用的Spring组件之间传播
   - 在@Transactional注解的服务方法会产生一个新的线程的情况下，事务是不会从调用者线程传播到新建线程的
 
+### 注意
+
+[@Transactional注解失效的6种场景](https://blog.csdn.net/hon_vin/article/details/105134342)
+

@@ -243,17 +243,13 @@ contents 数组是整数集合的底层实现：整数集合的每个元素都�
 
 ### **合理的数据编码**
 
-**String**：存储数字的话，采用int类型的编码，如果是非数字的话，采用 raw 编码；
+Redis 支持多种数据数据类型，每种基本类型，可能对多种数据结构。什么时候,使用什么样数据结构，使用什么样编码，是 redis 设计者总结优化的结果。
 
-**List**：字符串长度及元素个数小于一定范围使用 ziplist 编码，任意条件不满足，则转化为 linkedlist 编码；
-
-**Hash**：hash 对象保存的键值对内的键和值字符串长度小于一定值及键值对；
-
-**Set**：保存元素为整数及元素个数小于一定范围使用 intset 编码，任意条件不满足，则使用 hashtable 编码；
-
-**Zset**：zset 对象中保存的元素个数小于及成员长度小于一定值使用 ziplist 编码，任意条件不满足，则使用 skiplist 编码。
-
-
+> - String：如果存储数字的话，是用int类型的编码;如果存储非数字，小于等于39字节的字符串，是embstr；大于39个字节，则是raw编码。
+> - List：如果列表的元素个数小于512个，列表每个元素的值都小于64字节（默认），使用ziplist编码，否则使用linkedlist编码
+> - Hash：哈希类型元素个数小于512个，所有值小于64字节的话，使用ziplist编码,否则使用hashtable编码。
+> - Set：如果集合中的元素都是整数且元素个数小于512个，使用intset编码，否则使用hashtable编码。
+> - Zset：当有序集合的元素个数小于128个，每个元素的值小于64字节时，使用ziplist编码，否则使用skiplist（跳跃表）编码
 
 ###  Redis对象一些细节
 
@@ -280,3 +276,6 @@ contents 数组是整数集合的底层实现：整数集合的每个元素都�
 [2] https://mp.weixin.qq.com/s/pCs2YwysJEnnz0AW_zkXIw
 
 [3] https://mp.weixin.qq.com/s/DFOGihcocb0VGBqDD6zWWA
+
+[4] [2W字！详解20道Redis经典面试题！（珍藏版）](https://mp.weixin.qq.com/s/1wqbnpN8aeDBoy9NDh66vg)
+

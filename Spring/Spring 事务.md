@@ -4,7 +4,7 @@
 
 数据库事务是指作为单个逻辑工作单元执行的一系列操作，这些操作要么一起成功，要么一起失败，是一个不可分割的工作单元。
 
-- **原子性（Atomicity）：** 一个事务（transaction）中的所有操作，要么全部完成，要么全部不完成，不会结束在中间某个环节。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样。即，事务不可分割、不可约简。
+- **原子性（Atomicity）：** 一个事务（transaction）中的所有操作，要么全部完成，要么全部不完成，不会结束在中间某个环节。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样。即，事务不可分割。
 - **一致性（Consistency）：** 在事务开始之前和事务结束以后，数据库的完整性没有被破坏。这表示写入的资料必须完全符合所有的预设约束、触发器、级联回滚等。
 - **隔离性（Isolation）：** 数据库允许多个并发事务同时对其数据进行读写和修改，隔离性可以防止多个事务并发执行时由于交叉执行而导致数据的不一致。事务隔离分为不同级别，包括`未提交读（Read Uncommitted）`、`提交读（Read Committed）`、`可重复读（Repeatable Read）`和`串行化（Serializable）`。
 - **持久性（Durability）:** 事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失。
@@ -59,7 +59,7 @@ rollback() 用来回滚事务。
 
 2.传播性
 
-3.回滚规则
+3.回滚规则（实现类中）
 
 4.超时时间
 
@@ -90,7 +90,7 @@ public interface TransactionStatus extends TransactionExecution, SavepointManage
 
 1. isNewTransaction() 方法获取当前事务是否是一个新事务。
 2. setRollbackOnly() 方法设置事务必须回滚。
-3. isRollbackOnly() 方法获取事务只能回滚。
+3. isRollbackOnly() 方法获取事务是否只能回滚。
 4. isCompleted() 方法用来获取是一个事务是否结束。
 
 ###  3、编程式事务
@@ -292,7 +292,7 @@ public class JavaConfig {
 }
 ```
 
-Java 配置中通过 @ImportResource 注解导入了 XML 配置，XML 配置中的内容就是开启 `@Transactional` 注解的支持，所以 Java 配置中省略了 `@EnableTransactionManagement` 注解。
+Java 配置中通过 `@ImportResource` 注解导入了 XML 配置，XML 配置中的内容就是开启 `@Transactional` 注解的支持，所以 Java 配置中省略了 `@EnableTransactionManagement` 注解。
 
 ### 5、事务属性
 
@@ -320,7 +320,7 @@ transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_SERIALIZAB
 public void update2() {
     //创建事务的默认配置
     DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
-    definition.setIsolationLevel(TransactionDefinition.ISOLATION_SERIALIZABLE);
+    def0inition.setIsolationLevel(TransactionDefinition.ISOLATION_SERIALIZABLE);
     TransactionStatus status = platformTransactionManager.getTransaction(definition);
     try {
         jdbcTemplate.update("update account set money = ? where username=?;", 999, "zhangsan");

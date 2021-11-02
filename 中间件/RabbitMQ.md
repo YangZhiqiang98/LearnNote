@@ -58,6 +58,28 @@ Broker: 消息中间件的服务节点。大多数情况下，可以将一个 Ra
 
 ![RabbitMQ 消息队列的运转过程](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211102070735.png)
 
+### 队列
+
+队列是 RabbitMQ 的内部对象，用于存储消息。
+
+多个消费者可以订阅同一队列，这时队列中的消息会被平均分摊（Round-Robin,即轮询）给多个消费者进行处理，而不是每个消费者都收到所有的消息并处理。RabbitMQ 不支持队列层面的广播消费。
+
+### 交换器、路由键、绑定
+
+Exchange:交换器。实际上，消息并不是直接投递到队列的。而是先发送到 Exchange(交换器，X),由交换器将消息路由到一个或者多个队列中。如果路由不到，或许会返回生产者，或许直接丢弃。
+
+![exchange](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211102072410.png)
+
+RoutingKey:路由键。生产者将消息发送给交换器的时候，一般会指定一个 RoutingKey，用来指定这个消息的路由规则，而这个 RoutingKey 需要与交换器类型和绑定键（BindingKey）联合使用才能最终生效。
+
+在交换器类型和绑定键（BindingKey）固定的情况下，生产者可以再发送消息给交换器时，通过指定 RoutingKey 来决定消息流向哪里。
+
+Binding：绑定。RabbitMQ 中通过绑定将交换器与队列关联起来，在绑定的时候一般会指定一个绑定键（BindingKey）。
+
+生产者将消息发送给交换器时，需要一个 RoutingKey，当 BindingKey 和 RoutingKey 相匹配时，消息会被路由到对应的队列中。在绑定多个队列到同一交换器的时候，这些绑定允许使用相同的 BindingKey。
+
+![bindings](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211102195127.png)
+
 ### 交换器类型
 
 常用的类型有四种，`fanout`、`direct`、`topic`、`headers`。
@@ -66,6 +88,8 @@ Broker: 消息中间件的服务节点。大多数情况下，可以将一个 Ra
 
 * direct：把消息路由到 BindingKey 和 RoutingKey **完全匹配**的队列中。
 
+  ![Direct 类型的交换器](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211102200814.png)
+
 * topic：在 direct 交换器的匹配规则上进行扩展，将消息路由到 BindingKey 和 RoutingKey **相匹配**的队列中。
 
   匹配规则:
@@ -73,6 +97,8 @@ Broker: 消息中间件的服务节点。大多数情况下，可以将一个 Ra
   - RoutingKey 为 `.` 分隔的字符串，（被 `.` 分隔开的每一段独立的字符串成为一个单词）。如：“com.rabbitmq.client”
   - BindingKey 和 RoutingKey 一样也是 `.` 分隔的字符串。
   - BindingKey 中也可以存在两种特殊字符串 `*` 和 `#`，用于做模糊匹配。其中，`*`用于匹配一个单词，`#` 用于匹配多个单词（也可以是 0 个）。
+
+  ![topic 类型的交换器](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211102211742.png)
 
 * headers：headers 类型的交换器不依赖路由键的匹配规则来路由消息，而是根据发送的消息的消息内容中的 headers 属性进行匹配。（性能很差，不实用）
 

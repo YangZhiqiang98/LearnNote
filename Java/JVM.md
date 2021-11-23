@@ -58,13 +58,14 @@ Java 虚拟机的启动是通过引导类加载器（Bootstrap Class Loader）�
 ![JVM架构](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211103203429.png)
 
 ### 类加载子系统
-<img src="http://image.yzqfrist.com/20201126231611.png" alt="类加载子系统" style="zoom: 67%;" />
+
+![类加载子系统](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211123212020.png)
 
 - 类加载器子系统负责从文件系统或者网络中加载 class 文件，class 文件在文件开头有特定的文件标识。（0xCAFEBABE）(咖啡宝贝)
 - ClassLoader 只负责 class 文件的加载，至于它是否可以运行，则由 Execution Engine决定。
 - 加载的类信息存放在一块称为**方法区**的内存空间，除了类的信息外，方法区中还会存放**运行时常量池信息**，可能还包括字符串字面量和数字常量（这部分常量信息是 Class 文件中常量池部分的内存映射）。
 #### 类的加载过程
-<img src="http://image.yzqfrist.com/20201126232153.png" alt="类加载过程" style="zoom:50%;" />
+![类加载过程](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211123212053.png)
 
 ##### 加载
 
@@ -1844,4 +1845,179 @@ real：指的是在此次 GC 事件中所花费的总时间
 2、GCViewer
 
 
+
+## 类文件结构
+
+### 虚拟机的基石：Class 文件
+
+字节码文件里是什么？
+
+​	源代码经过编译器编译后生成一个字节码文件，字节码是一种二进制的类文件，它的内容是 JVM 的指令。
+
+什么是字节码指令（byte code）？
+
+​	Java 虚拟机指令由一个字节长度的、代表着某种特定操作含义的操作码（opcode）以及跟随其后的零至多个代表此操作所需参数的操作数（operand）所构成。虚拟机中许多指令并不包含操作数，只有一个操作码。
+
+
+
+任何一个 Class 文件都对应着唯一的一个类或接口的定义信息，但是反过来说，类或接口并不一定都得定义在文件里，即不一定以磁盘文件的形式存在（譬如类或接口也可以动态生成，直接送入类加载器中）。
+
+Class 文件是一组以 8 个字节为基础单位的二进制流，各个数据项目严格按照顺序紧凑地排列在文件之中，中间没有添加任何分隔符。当遇到需要占用 8 个字节以上空间的数据项时，则会按照高位在前的方式分割成若干个 8 个字节进行存储。
+
+Class 文件格式采用一种类似于 C 语言结构体的伪结构来存储数据，这种伪结构中只有两种数据类型：“**无符号数**” 和 “**表**”。
+
+- 无符号数属于基本的数据类型，以 u1、u2、u4、u8 来分别代表 1 个字节、 2 个字节、 4 个字节和 8 个字节的无符号数，无符号数可以用来描述数字、索引引用、数量值或者按照 UTF-8 编码构成字符串值。
+- 表是由多个无符号数或者其他表作为数据项构成的复合数据类型，为了便于区分，所有表的命名都习惯性地以 “_info” 结尾。表用于描述有层次关系的复合结构的数据，整个 Class 文件本质上也可以视作是一张表。这张表有下表所示的数据项按严格顺序排列构成。
+
+[Chapter 4. The class File Format (oracle.com)](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1)
+
+| 类型           | 名称                | 说明                      | 数量                    |
+| -------------- | ------------------- | ------------------------- | ----------------------- |
+| u4             | magic               | 魔数，识别 Class 文件格式 | 1                       |
+| u2             | minor_version       | 副版本号（小版本）        | 1                       |
+| u2             | major_version       | 主版本号（大版本）        | 1                       |
+| u2             | constant_pool_count | 常量池计数器              | 1                       |
+| cp_info        | constant_pool       | 常量池表                  | constant_pool_count - 1 |
+| u2             | access_flags        | 访问标识                  | 1                       |
+| u2             | this_class          | 类索引                    | 1                       |
+| u2             | super_class         | 父类索引                  | 1                       |
+| u2             | interface_count     | 接口计数器                | 1                       |
+| u2             | interfaces          | 接口索引集合              | 1                       |
+| u2             | fields_count        | 字段计数器                | 1                       |
+| filed_info     | fields              | 字段表                    | fields_count            |
+| u2             | methods_count       | 方法计数器                | 1                       |
+| method_info    | methods             | 方法表                    | methods_count           |
+| u2             | attributes_count    | 属性计数器                | 1                       |
+| attribute_info | attributes          | 属性表                    | attributes_count        |
+
+无论是无符号数还是表，当需要描述同一类型但数量不定的多个数据时，经常会使用一个前置的容量计数器加若干个连续的数据项的形式，这时候称这一系列连续的同一类型的数据为某一类型的 “集合”。
+
+Class 文件的总体结构如下：
+
+- 魔数
+- Class 文件版本
+- 常量池
+- 访问标志
+- 类索引、父类索引、接口索引集合
+- 字段表集合
+- 方法表集合
+- 属性表集合
+
+#### 魔数与 Class 文件的版本
+
+每个 Class 文件的头 4 个字节被称为魔数（Magic Number），它的**唯一作用是确定这个文件是否为一个能被虚拟机接受的 Class 文件**。使用魔数而不是扩展名来进行识别主要是基于安全考虑，因为文件扩展名可以随意改动。Class 文件的魔数值为 0xCAFEBABE。
+
+紧接着魔数的 4 个字节存储的是 Class 文件的版本号：第 5 个和第 6 个字节是次版本号（Minor Version），第 7 和 8 个字节是主版本号（Major Version）。Java 的版本号是从 45 开始的，JDK1.1 之后的每个 JDK 大版本发布主版本号向上加 1。如：**52 主版本号代表 JDK 版本为 1.8**。高版本的 JDK 能向下兼容以前版本的 Class 文件，但不能运行以后版本的 Class 文件，因为 《Java 虚拟机规范》明确要求了即使文件格式并未发生任何变化，虚拟机也必须拒绝执行超过其版本号的 Class 文件，否则 JVM 会抛出 **UnsupportedClassVersionError**。
+
+关于次版本号，曾经被短暂使用过，从 JDK 1.2 以后，次版本号均未使用，全部固定位零。
+
+#### 常量池
+
+紧接着主、次版本号之后的是常量池入口，常量池可以比喻为 Class 文件里的资源仓库，是在 Class 文件中第一个出现的**表类型数据**项目。
+
+由于常量池中常量的数量是不固定的，所以在常量池的入口需要放置一项 u2 类型的数据，代表常量池容量计数值（constant_pool_count）。与 Java 中语言习惯不同，这个**容量计数是从 1 而不是 0 开始的**。如下图所示，常量池容量为十六进制数 0x0016,即十进制的 22，这代表常量池中有 21 项常量，索引值范围为 1 ~ 21。在 Class 文件格式规范制定只是，设计者将第 0 项空出来是有特殊考虑的，这样的目的在于，如果后面某些指向常量池的索引值的数据在特定情况下需要表达 “**不引用任何一个常量池项目**” 的含义，可以把**索引值设置为 0 来表示**。Class 文件结构中，**只有常量池的容量计数是从 1 开始**，对于其他集合类型，包括接口索引集合、字段表集合、方法表集合等的容量计数都是从 0 开始。
+
+
+
+
+
+![image-20211122223532121](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211122223541.png)
+
+
+
+![image-20211122223913659](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211122223915.png)
+
+
+
+常量池汇总主要存放两大类常量：字面量（Literal） 和符号引用（Symbolic References）。
+
+字面量有文本字符串和声明为 final 的常量值。
+
+符号引用主要包括下面几类常量：
+
+- 被模块导出或者开放的包（Package）
+- 类或接口的全限定名（Fully Qualified Name）
+- 字段的名称和描述符（Descriptor）
+- 方法的名称和描述符
+- 方法句柄和方法类型（Method Handle、Method Type、Invoke Dynamic）
+- 动态调用点和动态常量（Dynamically-Computed Call Site、Dynamically-Computed Constant）
+
+
+
+常量池中的每一项常量都是一个表，最初常量表中共有 11 中结构各不相同的表结构数据，后来为了更好地支持动态语言调用，额外增加了 4 中动态语言相关的常量（下表倒数第 6 个到倒数第 10 个），为了支持 Java 模块化系统，又加入了 CONSTANT_Module_info 和 CONSTANT_Package_info ，所以截止 JDK13，常量表中分别有 17 种不同类型的常量。这些表结构的起始的第一位是个 u1 类型的标志位（Tag），代表着当前常量属于哪种常量类型。下表为常量池的项目类型。
+
+
+
+[Chapter 4. The class File Format (oracle.com)](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4)
+
+| Constant Kind                      | Tag  | 描述                           | Java SE |
+| ---------------------------------- | ---- | ------------------------------ | ------- |
+| `CONSTANT_Utf8_info`               | 1    | UTF-8 编码的字符串             | 1.0.2   |
+| `CONSTANT_Integer_info`            | 3    | 整型字面量                     | 1.0.2   |
+| `CONSTANT_Float_info`              | 4    | 浮点型字面量                   | 1.0.2   |
+| `CONSTANT_Long_info`               | 5    | 长整型字面量                   | 1.0.2   |
+| `CONSTANT_Double_info`             | 6    | 双精度浮点型字面量             | 1.0.2   |
+| `CONSTANT_Class_info`              | 7    | 类或接口的符号引用             | 1.0.2   |
+| `CONSTANT_String_info`             | 8    | 字符串类型字面量               | 1.0.2   |
+| `CONSTANT_Fieldref_info`           | 9    | 字段的符号引用                 | 1.0.2   |
+| `CONSTANT_Methodref_info`          | 10   | 类中方法的符号引用             | 1.0.2   |
+| `CONSTANT_InterfaceMethodref_info` | 11   | 接口中方法的符号引用           | 1.0.2   |
+| `CONSTANT_NameAndType_info`        | 12   | 字段或方法的部分符号引用       | 1.0.2   |
+| `CONSTANT_MethodHandle_info`       | 15   | 表示方法句柄                   | 7       |
+| `CONSTANT_MethodType_info`         | 16   | 表示方法类型                   | 7       |
+| `CONSTANT_Dynamic_info`            | 17   | 表示一个动态计算常量           | 11      |
+| `CONSTANT_InvokeDynamic_info`      | 18   | 表示一个动态的方法调用点       | 7       |
+| `CONSTANT_Module_info`             | 19   | 表示一个模块                   | 9       |
+| `CONSTANT_Package_info`            | 20   | 表示一个模块中开放或者导出的包 | 9       |
+
+> 描述符
+>
+> 描述符的作用是用来描述字段的数据类型、方法的参数列表（包括数量、类型以及顺序）和返回值。根据描述符规则，基本数据类型（byte、char、double、float、int、long、short、boolean）以及代表无返回值得 void 类型都用一个大写字符来表示，而对象类型则用字符 L加对象的全限定名来表示，详见下表：
+>
+> | 标志符 | 含义                                                   |
+> | ------ | ------------------------------------------------------ |
+> | B      | 基本数据类型 byte                                      |
+> | C      | 基本数据类型 char                                      |
+> | D      | 基本数据类型 double                                    |
+> | F      | 基本数据类型 float                                     |
+> | I      | 基本数据类型 int                                       |
+> | J      | 基本数据类型 long                                      |
+> | S      | 基本数据类型 short                                     |
+> | Z      | 基本数据类型 boolean                                   |
+> | V      | 代表 void 类型                                         |
+> | L      | 对象类型，比如：`Ljava/lang/Object;`                   |
+> | [      | 数组类型，代表一维数组，比如：`double[][][]` is `[[[D` |
+>
+> 用描述符来描述方法时，按照先参数列表，后返回值的顺序描述，参数列表按照参数的严格顺序放在一组小括号 “()“ 之内。如方法 java.lang.String.toString() 的描述符为 () Ljava/lang/String;，方法 int abc(int x[], int y) 的描述符为 （[II）I。
+
+
+
+> 虚拟机在加载 Class 文件时才会进行动态链接，也就是说，Class 文件中不会保存各个方法和子弹的最终内存布局信息，因此，这些字段和方法的符号引用不经过转换时无法直接被虚拟机使用的。**当虚拟机运行时，需要从常量池中获得对应的符号引用，再在类加载过程中的解析阶段将其替换为直接引用，并翻译到具体的内存地址中**。
+>
+> 
+>
+> 符号引用和直接引用的区别与联系：
+>
+> - 符号引用：符号引用以**一组符号**来描述所引用的目标，符号可以是任何形式的字面量，只要使用时能无歧义地定位到目标即可。**符号引用与虚拟机实现的内存布局无关**，引用的目标并不一定已经加载到了内存中。
+> - 直接引用：直接引用可以是直接**指向目标的指针、相对偏移量或是一个能间接定位到目标的句柄**。直接引用是**与虚拟机实现的内存布局相关**的，同一个符号引用在不同虚拟机实例上翻译出来的直接引用一般不会相同。如果有了直接引用，那说明引用的目标必定已经存在与内存之中了。
+
+
+
+
+
+#### 常量类型和结构
+
+[Chapter 4. The class File Format (oracle.com)](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4-140)
+
+![1598773300484](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211123211542.png)
+
+
+
+![1598773308492](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211123211554.png)
+
+#### Demo 字节码解析
+
+
+
+![image-20211123211407170](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211123211408.png)
 

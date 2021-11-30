@@ -79,11 +79,7 @@
 | CONSTANT_MethodType_info         | 16           | 标志方法类型           |
 | CONSTANT_InvokeDynamic_info      | 18           | 表示一个动态方法调用点 |
 
-## 常量类型和结构细节
 
-![1598773300484](assets/1598773300484.png)
-
-![1598773308492](assets/1598773308492.png)
 
 ## 访问标志
 

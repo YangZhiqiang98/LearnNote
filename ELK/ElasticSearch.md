@@ -10,7 +10,7 @@
 
 一个集群有一个名字 (Clsuter Name)，是集群的唯一标识，默认集群的名称是 elasticsearch ，具有相同名称的节点才会组成一个集群。
 
-可在 config/elasticsearch.yml 文件中配置集群名称：
+可在 `config/elasticsearch.yml` 文件中配置集群名称：
 
 ```yml
 cluster.name: my-application
@@ -25,7 +25,7 @@ cluster.name: my-application
 
 #### 2、节点（Node）
 
-集群中的一个服务器就是一个节点，节点中的会存储数据，同时参与集群的索引以及搜索功能。一个节点想要加入一个集群，只需要配置一下集群名称即可。es默认的集群发现方式可能会发生 `脑裂现象` 。
+集群中的一个服务器就是一个节点，节点中的会存储数据，同时参与集群的索引以及搜索功能。一个节点想要加入一个集群，只需要配置一下集群名称即可。es 默认的集群发现方式可能会发生 `脑裂现象` 。
 
 #### 3、索引（Index）
 
@@ -34,7 +34,7 @@ cluster.name: my-application
 
 #### 4、类型（Type）
 
-类型是索引上的逻辑分类或者分区。在es6之前，一个索引中可以有多个类型，从es7开始，一个索引中，只能有一个类型。
+类型是索引上的逻辑分类或者分区。在 es6 之前，一个索引中可以有多个类型，从 es7 开始，一个索引中，只能有一个类型。
 
 #### 5、文档（Document）
 
@@ -44,7 +44,7 @@ cluster.name: my-application
 
 索引都是存储在节点上的，但是受节点的空间大小以及数据处理能力，单个节点的处理效果可能不理想，此时可以对索引进行分片。当我们创建一个索引的时候，就需要指定分片的数量，每个分片本身也是一个功能完善并且独立的索引。
 
-默认情况下，一个索引会自动创建1个分片，并且为每一个分片创建一个副本。
+默认情况下，一个索引会自动创建 1 个分片，并且为每一个分片创建一个副本。
 
 #### 7、副本（Replicas）
 
@@ -102,7 +102,7 @@ ElasticSearch 核心功能就是数据检索。查询分析主要由两步：
 
 #### 中文分词器
 
-在 Es 中，适用较多的中文分词器是 [elasticsearch-analysis-ik](https://github.com/medcl/elasticsearch-analysis-ik) ，这是 es 的一个第三方插件。
+在 Es 中，使用较多的中文分词器是 [elasticsearch-analysis-ik](https://github.com/medcl/elasticsearch-analysis-ik) ，这是 es 的一个第三方插件。
 
 #### 自定义扩展词库
 
@@ -668,6 +668,12 @@ GET test1/_doc/d?routing=ee
 
 自定义 routing 可能会导致负载不均衡。
 
+如果文档在添加时指定了 routing，则查询、删除、更新时也需要指定 routing。
+
+The same `routing` value needs to be provided when [getting](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html), [deleting](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete.html), or [updating](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update.html) the document.
+
+> 测试可以不带？？
+
 ### 版本控制
 
 在 es 中， 版本控制使用的锁是乐观锁。[ Optimistic concurrency control](https://www.elastic.co/guide/en/elasticsearch/reference/current/optimistic-concurrency-control.html)
@@ -682,11 +688,11 @@ version 分为内部版本控制和外部版本控制。
 
 ##### 内部版本
 
-es 自己维护的就是内部版本， 当创建一个文档时，  es 会给文档的版本赋值为 1。
+es 自己维护的就是内部版本， 当创建一个文档时，es 会给文档的版本赋值为 1。
 
 每当用户修改一次文档，版本号就会自增 1。
 
-如果使用内部版本， es 要求 version 参数的值必须和 es 文档中的 version 的值相等，才能操作成功。
+如果使用内部版本，es 要求 version 参数的值必须和 es 文档中的 version 的值相等，才能操作成功。
 
 ##### 外部版本
 
@@ -734,7 +740,7 @@ PUT book/_doc/e?routing=ee
 }
 ```
 
-`seq_no` 不属于某一个文档，它是属于整个索引的（version 则是属于某一个文档的，每个文档的 version 互不印象）。现在更新文档时，使用 `seq_no` 来做并发。由于 `seq_no` 是属于整个 index 的，所以任何文档的修改或者新增， `seq_no` 都会自增。
+`seq_no` 不属于某一个文档，它是属于整个索引的（version 则是属于某一个文档的，每个文档的 version 互不影响）。现在更新文档时，使用 `seq_no` 来做并发。由于 `seq_no` 是属于整个 index 的，所以任何文档的修改或者新增， `seq_no` 都会自增。
 
 现在可以通过 `seq_no` 和 primary_term 来做乐观并发控制。
 
@@ -878,7 +884,7 @@ PUT blog
 ##### 字符串类型
 
 - ~~string：（已过期），es5 之前用来描述字符串~~
-- [text](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/text.html)：用来做全文检索，用了 text 后，字段内容会被分析， 在生成倒排索引之前，字符串会被分词器分成一个个词项。text 类型的字段不用于排序，很少用于聚合。这种字符串类型也被称为 analyzed 字段。
+- [text](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/text.html)：用来做全文检索，用了 text 后，字段内容会被分析，在生成倒排索引之前，字符串会被分词器分成一个个词项。text 类型的字段不用于排序，很少用于聚合。这种字符串类型也被称为 analyzed 字段。
 - [keyword](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/keyword.html) ：适用于结构化的字段，这种类型的字段可以用作过滤、排序、聚合等。也成为了 not-analyzed 字段。 
 
 ##### [数字类型](https://www.elastic.co/guide/en/elasticsearch/reference/current/number.html)
@@ -1181,8 +1187,6 @@ GET my-index-000001/_search
 }
 ```
 
-
-
 ##### [Token count](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/token-count.html)
 
 用于统计字符串分词后的词项个数。
@@ -1196,7 +1200,7 @@ PUT my-index-000001
         "type": "text",
         "fields": {
           "length": { 
-            "type":     "token_count",
+            "type":"token_count",
             "analyzer": "standard"
           }
         }
@@ -1275,7 +1279,7 @@ PUT my-index-000001
 
 normalizer 参数用于解析前（索引或者查询）的标准化配置。
 
-在 es 中，对于不想切分得字符串，通常会将其设置为 keyword，搜索的时候也是使用整个词进行搜索。如果在索引前没有做好数据清洗，导致大小写不一致，就会搜索不到，我们可以使用 normalizer 在索引之前以及查询之前进行文档的标准化。
+在 es 中，对于不想切分的字符串，通常会将其设置为 keyword，搜索的时候也是使用整个词进行搜索。如果在索引前没有做好数据清洗，导致大小写不一致，就会搜索不到，我们可以使用 normalizer 在索引之前以及查询之前进行文档的标准化。
 
 如果使用了 normalizer，就可以在索引和查询时，分别对文档进行预处理。
 
@@ -1747,8 +1751,6 @@ PUT my-index-000001
 }
 ```
 
-
-
 #### [store](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/mapping-store.html)
 
 默认情况下，字段会被索引，也可以搜索，但是不会存储，虽然不会被存储的，但是 `_source` 中有一个字段的备份。如果想将字段存储下来，可以通过配置 store 来实现。
@@ -1855,11 +1857,11 @@ PUT my-index-000001
 
 **搜索分为两个过程：**
 
-**1、当向索引中保存文档时，默认情况下， es 中会保存两份内容， 一份是 `_source` 中的数据，另一份则是通过分词、排序等一系列过程生成的倒排索引文件，倒排索引中保存了词项和文档之间的对应关系。**
+**1、当向索引中保存文档时，默认情况下，es 中会保存两份内容，一份是 `_source` 中的数据，另一份则是通过分词、排序等一系列过程生成的倒排索引文件，倒排索引中保存了词项和文档之间的对应关系。**
 
 **2、搜索时，当 es 接收到用户的搜索请求之后，就会去倒排索引中查询，通过倒排索引中维护的倒排记录表找到关键词对应的文档集合，然后对文档进行评分、排序、高亮等处理，处理完成后返回文档。**
 
-[Request body search | Elasticsearch Guide [7.13\] | Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/search-request-body.html)
+[search-request-body](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html)
 
 ```
 PUT books
@@ -1945,8 +1947,6 @@ GET books/_search
   "from": 10
 }
 ```
-
-
 
 #### [过滤返回字段](https://www.elastic.co/guide/en/elasticsearch/reference/7.14/search-fields.html#source-filtering)
 
@@ -2063,7 +2063,7 @@ GET books/_search
 
 query 是查询的关键字，会被分词器进行分解，分解之后去倒排索引中进行匹配。
 
-slope 是指关键字之间的最小距离，默认是 0，但是注意不是关键字之间间隔的字数。文档中的字段被分词器解析之后，解析出来的词都包含一个 position字段表示词项的位置，查询短语分词之后的 position 之间的间隔要满足 slop 的要求。
+slope 是指关键字之间的最小距离，默认是 0，但是注意不是关键字之间间隔的字数。文档中的字段被分词器解析之后，解析出来的词都包含一个 position 字段表示词项的位置，查询短语分词之后的 position 之间的间隔要满足 slop 的要求。
 
 ![image-20210803212526853](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/image-20210803212526853.png)
 
@@ -2454,8 +2454,6 @@ GET books/_search
   }
 }
 ```
-
-
 
 #### [dis_max_query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-dis-max-query.html)
 

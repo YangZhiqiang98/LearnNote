@@ -1,4 +1,4 @@
-第 1 章 Netty 介绍和应用场景
+# 第 1 章 Netty 介绍和应用场景
 
 ## 1.1 Netty 的介绍
 
@@ -150,12 +150,12 @@
 若要从缓冲区获取数据，需要调用 `flip()` 方法，**切换成读模式**，这个方法可以改动 `position` 和 `limit` 的位置：
 
 ```java
-    public final Buffer flip() {
-        limit = position;
-        position = 0;
-        mark = -1;
-        return this;
-    }
+public final Buffer flip() {
+    limit = position;
+    position = 0;
+    mark = -1;
+    return this;
+}
 ```
 
 若要想缓冲区写数据，需要调用 `clear()` 方法，**切换成写模式**，这个函数会“清空”缓冲区：

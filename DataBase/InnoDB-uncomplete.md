@@ -220,7 +220,7 @@ set global long_query_time= 5;
 
 - `log_queries_not_using_indexes`：如果运行的 SQL 语句没有使用索引，则这条 SQL 也会被记录到慢查询日志文件。（默认关闭）
 
-- `log_throttle_queries_not_using_indexes`：每分钟云溪记录到 slow log 的且未使用索引的 SQL 语句次数，默认为 0，表示没有限制。
+- `log_throttle_queries_not_using_indexes`：每分钟记录到 slow log 的且未使用索引的 SQL 语句次数，默认为 0，表示没有限制。
 
 - `log_output`：指定慢查询输出的格式，默认为 FILE，可设置为 TABLE，记录到 mysql 架构下的 slow_log 表。
 
@@ -420,8 +420,8 @@ InnoDB 先写 重做日志文件 1 ，当达到文件最后时，切换至重做
 
 #### bin log 和 redo_log 区别
 
-- **记录的范围不同**。bin log 会记录所有与 MySQL 数据库有关的日志记录，包括InnoDB、MyISAM、Heap 等其他存储引擎的日志。而 InnoDB 的重做日志只记录有关该存储引起本身的事务日志。
-- **记录的内容不同**。bin log 记录的是关于一个事务的具体操作内筒，即该日志是逻辑日志。InnoDB 的重做日志文件记录的是关于每个页（page）的更改的物理情况。
+- **记录的范围不同**。bin log 会记录所有与 MySQL 数据库有关的日志记录，包括InnoDB、MyISAM、Heap 等其他存储引擎的日志。而 InnoDB 的重做日志只记录有关该存储引擎本身的事务日志。
+- **记录的内容不同**。bin log 记录的是关于一个事务的具体操作内容，即该日志是逻辑日志。InnoDB 的重做日志文件记录的是关于每个页（page）的更改的物理情况。
 - **写入的时间不同**。bin log 仅在事务提交前进行提交，即只写磁盘一次，不论此时该事务多大。而在事务进行的过程中，却不断有重做日志条目（redo entry） 被写入到重做日志文件中。
 
 

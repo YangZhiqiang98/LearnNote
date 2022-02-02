@@ -12,7 +12,7 @@
 
 - SIMPLE： 表示此查询不包含 UNION 查询或子查询
 - PRIMARY： 表示此查询是最外层的查询
-- SUBQUERY： 包含在SELECT列表中的子查询中的SLECT（换句话说，不在FROM子句中）
+- SUBQUERY： 包含在SELECT列表中的子查询中的SELECT（换句话说，不在FROM子句中）
 - UNION： 表示此查询是 UNION 的第二或随后的查询
 - DEPENDENT UNION：UNION 中的第二个或后面的查询语句, 取决于外面的查询
 - UNION RESULT：UNION 的结果，用来从UNION的匿名临时表检索结果的SELECT。
@@ -45,7 +45,7 @@ type 常用的取值有:
 
 ##### 5. possible_keys
 
-它表示 MySQL在查询时，可能使用到的索引。注意，即使有些索引在 possible_keys 中出现，但是并不表示此索引会真正地被 mysql 使用到。MySQL在查询时具体使用了哪些索引，由 key 字段决定。
+它表示 MySQL 在查询时，可能使用到的索引。注意，即使有些索引在 possible_keys 中出现，但是并不表示此索引会真正地被 MySQL 使用到。MySQL在查询时具体使用了哪些索引，由 key 字段决定。
 
 ##### 6、key
 
@@ -59,7 +59,7 @@ type 常用的取值有:
 
 ##### 8、ref
 
-这一列显示了之前的表在key列记录的索引中查找值所用的列或常量。
+表示key展示的索引实际使用的列或者常量。
 
 ##### 9、rows
 
@@ -73,4 +73,12 @@ explain 中的很多额外的信息会在 extra 字段显示, 常见的有以下
 - using index：**覆盖索引**扫描，表示查询在索引树中就可查找所需数据，不用扫描表数据文件，往往说明性能不错。
 - using temporary：查询有使用临时表, 一般出现于排序， 分组和多表 join 的情况， 查询效率不高，建议优化。
 - using where ：这意味着MySQL服务器将在存储引擎检索行后再进行过滤。许多WHERE条件里涉及索引中的列， 当（并且如果）它读取索引时，就能被存储引擎校验，因此不是所有带WHERE子句的查询都回显示”Using where'。有时“Using where”的出现就是一个暗示：查询可受益于不同的索引。
+- Using index condition: 使用**索引下推**，索引下推简单来说就是加上了条件筛选，减少了回表的操作。
 
+- Using sort_union(), Using union(), sing intersect() : 使用了索引合并。
+
+
+
+
+
+**https://mp.weixin.qq.com/s/ImRPzop4vvTKoNgAdC4_tA**

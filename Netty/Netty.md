@@ -144,7 +144,7 @@
 | ------------ | ------------------------------------------------------------ |
 | **Capacity** | 容量，**缓冲区能够容纳的数据元素的最大数量**。容量在缓冲区创建时被设定，并且永远不能被改变。(不能被改变的原因:底层是数组) |
 | **Limit**    | 上界，**缓冲区里的数据的总数**，代表了当前缓冲区中一共有多少数据，可修改。 |
-| **Position** | 位置，**下一个要被读或写的元素的位置**。Position会自动由相应的 `get()` 和 `put()`函数更新。 |
+| **Position** | 位置，**下一个要被读或写的元素的位置**。Position 会自动由相应的 `get()` 和 `put()`函数更新。 |
 | **Mark**     | 标记，一个备忘位置。**用于记录上一次读写的位置**。           |
 
 若要从缓冲区获取数据，需要调用 `flip()` 方法，**切换成读模式**，这个方法可以改动 `position` 和 `limit` 的位置：
@@ -213,6 +213,8 @@ public final Buffer clear() {
 | ByteBuffer put(int index, byte b)                      | 从绝对位置上 put                                |
 
 ## 3.5 通道（Channel）
+
+
 
 ## 3.6 基本介绍
 
@@ -372,11 +374,11 @@ public class ScatteringAndGatheringTest {
 
 
 
-传统的IO操作，是操作系统将磁盘中的文件读入到系统空间里面，然后再拷贝到用户空间中，供用户使用。于是有人在想了，拷贝太麻烦太耗时了，我们单独划出一块内存区域，让系统空间和用户空间同时映射到同一块地址不就省略了拷贝的步骤吗？
+传统的 IO 操作，是操作系统将磁盘中的文件读入到系统空间里面，然后再拷贝到用户空间中，供用户使用。于是有人在想了，拷贝太麻烦太耗时了，我们单独划出一块内存区域，让系统空间和用户空间同时映射到同一块地址不就省略了拷贝的步骤吗？
 
-这个被划出来的单独的内存区域叫做虚拟地址空间，而不同空间到虚拟地址的映射就叫做 Buffer Map。 Java中是有一个专门的 MappedByteBuffer 来代表这种操作。
+这个被划出来的单独的内存区域叫做虚拟地址空间，而不同空间到虚拟地址的映射就叫做 Buffer Map。 Java 中是有一个专门的 `MappedByteBuffer` 来代表这种操作。
 
-MappedByteBuffer 的 size 有限制，不能大于 `Integer.MAX_VALUE`。
+> MappedByteBuffer 的 size 有限制，不能大于 `Integer.MAX_VALUE`。
 
 依据：
 
@@ -571,7 +573,7 @@ socket.getOutputStream().write(arr);
 
 1. `NIO` 的类库和 `API` 繁杂，使用麻烦：需要熟练掌握 `Selector`、`ServerSocketChannel`、`SocketChannel`、`ByteBuffer`等。
 2. 需要具备其他的额外技能：要熟悉 `Java` 多线程编程，因为 `NIO` 编程涉及到 `Reactor` 模式，你必须对多线程和网络编程非常熟悉，才能编写出高质量的 `NIO` 程序。
-3. 开发工作量和难度都非常大：例如客户端面临断连重连、网络闪断、半包读写、失败缓存、网络拥塞和异常流的处理等等。4. `JDK NIO` 的 `Bug`：例如臭名昭著的 `Epoll Bug`，它会导致 `Selector` 空轮询，最终导致 `CPU100%`。直到 `JDK1.7` 版本该问题仍旧存在，没有被根本解决。
+3. 开发工作量和难度都非常大：例如客户端面临断连重连、网络闪断、半包读写、失败缓存、网络拥塞和异常流的处理等等。4. `JDK NIO` 的 `Bug`：例如臭名昭著的 `Epoll Bug`，它会导致 `Selector` 空轮询，最终导致 `CPU 100%`。直到 `JDK1.7` 版本该问题仍旧存在，没有被根本解决。
 
 ## 4.2 Netty 官网说明
 
@@ -760,7 +762,7 @@ socket.getOutputStream().write(arr);
 
 ### 5.8.4 工作原理示意图 - 详细版
 
-![img](image/Netty/chapter05_10.png)
+![Netty模型](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20220206200936.png)
 
 ### 5.8.5 对上图的说明小结
 

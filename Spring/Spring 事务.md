@@ -73,6 +73,8 @@ rollback() 用来回滚事务。
 
 ![image-20211031154207574](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211031154209.png)
 
+
+
 如果开发者使用了编程式事务的话，直接使用 `DefaultTransactionDefinition` 即可。
 
 ##### TransactionStatus
@@ -528,7 +530,7 @@ Existing transaction found for transaction marked with propagation 'never'
 
 #### 5.3 回滚规则
 
-默认情况下，事务只有遇到运行期异常（RuntimeException 的子类）以及 Error 时才会回滚，在遇到检查型（Checked Exception）异常时不会回滚。
+默认情况下，事务只有遇到运行期异常（`RuntimeException` 的子类）以及 Error 时才会回滚，在遇到检查型（Checked Exception）异常时不会回滚。
 
 > [Java 异常体系](https://www.liaoxuefeng.com/wiki/1252599548343744/1264734349295520)
 >
@@ -624,7 +626,7 @@ XML 配置：
 </tx:advice>
 ```
 
-在 `TransactionDefinition` 中以 `int` 的值来表示超时时间，其单位是秒，默认值为-1。
+在 `TransactionDefinition` 中以 `int` 的值来表示超时时间，其单位是秒，默认值为 -1。
 
 ### 6、注意事项
 

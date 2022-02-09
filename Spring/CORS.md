@@ -22,11 +22,11 @@ public void verifyCode(HttpServletRequest request, HttpServletResponse resp) thr
 @CrosOrigin 注解的各属性含义如下：
 
 - allowCredentials: 浏览器是否应当发送凭证信息，如 Cookie。
-- allowHeaders: 设置请求被允许的请求头字段，* 表示所有字段。
+- allowHeaders: 设置请求被允许的请求头字段，`*` 表示所有字段。
 - exposedHeaders：哪些响应头可以作为响应的部分暴露出来。
 - maxAge: 预检请求的有效期，有效期内不必再次发送预检请求，默认为 1800 秒。
-- methods: 允许的请求方法，* 代表允许所有的请求方法。
-- origins: 允许的请求域， * 代表允许所有的请求域。
+- methods: 允许的请求方法，`*` 代表允许所有的请求方法。
+- origins: 允许的请求域， `*` 代表允许所有的请求域。
 
 
 
@@ -34,7 +34,7 @@ CrossOrigin 最终会构建出一个 CorsInterceptor 拦截器，然后在拦截
 
 ### 二、addCorsMappings
 
-通过重写 WebMvcConfigurer#addCorsMappings 方法来实现。
+通过重写 `WebMvcConfigurer#addCorsMappings` 方法来实现。
 
 ```java
 @Configuration

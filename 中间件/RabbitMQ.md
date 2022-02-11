@@ -106,11 +106,11 @@ Binding：绑定。RabbitMQ 中通过绑定将交换器与队列关联起来，�
 
 * fanout：把所有发送到该交换器的消息路由到所有与该交换器绑定的队列中。
 
-* direct：把消息路由到 BindingKey 和 RoutingKey **完全匹配**的队列中。
+* direct：把消息路由到 BindingKey 和 RoutingKey **完全匹配** 的队列中。
 
   ![Direct 类型的交换器](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20211102200814.png)
 
-* topic：在 direct 交换器的匹配规则上进行扩展，将消息路由到 BindingKey 和 RoutingKey **相匹配**的队列中。
+* topic：在 direct 交换器的匹配规则上进行扩展，将消息路由到 BindingKey 和 RoutingKey **相匹配** 的队列中。
 
   匹配规则:
 

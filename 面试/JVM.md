@@ -91,6 +91,6 @@ synchronized 关键字同样可以保证有序性，它保证每个时刻只有�
 
 
 
-#### 双亲委派模型
+#### 双亲委派模型	
 
 [呵，十个双亲委派问题，想问倒我？](https://mp.weixin.qq.com/s/6kedGPZP4iTDuK-Wuzym4Q)

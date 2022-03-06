@@ -2,9 +2,8 @@
 
 ### 拦截器与过滤器的区别
 
-- 拦截器是基于 java 的反射机制，而过滤器是基于函数的回调。
-- 拦截器不依赖于 servlet 容器，而过滤器依赖于 servlet 容器。
-- 
+- `过滤器` 是基于函数回调的，`拦截器` 则是基于Java的反射机制（动态代理）实现的
+- Interceptor 不依赖于 servlet 容器，而 Filter 依赖于 servlet 容器。
 
 ### 执行时机
 
@@ -30,3 +29,4 @@
 
 [3] [Spring 拦截器和过滤器的区别?](https://www.zhihu.com/question/30212464/answer/1786967139)
 
+[4] [过滤器 和 拦截器的 6个区别，别再傻傻分不清了_程序员内点事-CSDN博客_过滤器和拦截器](https://blog.csdn.net/xinzhifu1/article/details/106356958)

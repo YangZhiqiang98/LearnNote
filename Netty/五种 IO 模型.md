@@ -41,7 +41,7 @@
 
 #### **2.同步非阻塞IO（noblocking I/O）**
 
-进程发起I/O请求后如果数据还未准备成功会先返回进行其他操作，通过轮询的方式定时获取数据准备结果。数据准备成功后阻塞等待，直到数据拷贝到进程地址空间。进程在第二阶段是阻塞状态。
+进程发起 I/O 请求后如果数据还未准备成功会先返回进行其他操作，通过轮询的方式定时获取数据准备结果。数据准备成功后阻塞等待，直到数据拷贝到进程地址空间。进程在第二阶段是阻塞状态。
 
 ![noblokcing io](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/noblocking%20%20io.png)
 
@@ -138,3 +138,5 @@ I/O 多路复用是指进程可以同时监控多个文件描述符，内核如�
 [4] [IO概念和五种IO模型](https://www.cnblogs.com/shengguorui/p/11949282.html)
 
 [5] [100%弄明白5种IO模型](https://zhuanlan.zhihu.com/p/115912936)
+
+[6] [这次答应我，一举拿下 I/O 多路复用！ (qq.com)](https://mp.weixin.qq.com/s?__biz=MzUxODAzNDg4NQ==&mid=2247489558&idx=1&sn=7a96604032d28b8843ca89cb8c129154&scene=21#wechat_redirect)

@@ -2,7 +2,7 @@
 
 #### MySQL逻辑架构
 
-![[MySQL服务器逻辑架构图]](image/Mysql/20201227190333.png)
+![[MySQL服务器逻辑架构图]](https://cdn.jsdelivr.net/gh/YangZhiqiang98/ImageBed/20220216213736.png)
 
 [MySQL逻辑架构图](https://www.processon.com/view/link/5fe86a0f1e08531ceab69e86)
 

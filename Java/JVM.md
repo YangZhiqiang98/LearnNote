@@ -2686,6 +2686,16 @@ NaN 值：
 
 指令 monitorenter 和 monitorexit 在执行时，都需要在操作数栈顶压入对象，之后 monitorenter 和 monitorexit 的锁定和释放都是针对这个对象的监视器进行的。
 
+
+
+
+
+
+
+
+
+
+
 ## 参考
 
 [1] [The Java ® Virtual Machine Specification (oracle.com)](https://docs.oracle.com/Java se/specs/JVMs/se8/html/index.html)
